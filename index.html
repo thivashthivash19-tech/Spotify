@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | John Music</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-entry { animation: fadeIn 0.8s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-[#0A0A0A] text-white flex items-center justify-center h-screen">
+
+    <!-- Login Container -->
+    <div class="bg-[#121212] p-10 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] w-full max-w-sm border border-[#1f1f1f] animate-entry">
+        
+        <!-- Placeholder for your Image -->
+        <div class="w-20 h-20 bg-gray-800 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl">
+            ✨
+        </div>
+
+        <h1 class="text-2xl font-semibold text-center mb-8 tracking-tight">Sign In</h1>
+
+        <div class="space-y-4">
+            <input type="email" id="email" placeholder="Email" class="w-full p-4 bg-[#1f1f1f] rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition-all">
+            <input type="password" id="password" placeholder="Password" class="w-full p-4 bg-[#1f1f1f] rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition-all">
+            
+            <button id="login-btn" class="w-full bg-white text-black font-bold py-4 rounded-full hover:scale-105 transition-transform duration-300">
+                Log In
+            </button>
+        </div>
+
+        <p class="mt-6 text-center text-gray-500 text-sm">
+            Don't have an account? <span class="text-green-500 cursor-pointer hover:underline">Sign Up</span>
+        </p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT8_4rWDSCs0mC18XpiqBMEc7YAIuJ6Y0",
+            authDomain: "myspotify-5966c.firebaseapp.com",
+            projectId: "myspotify-5966c",
+            storageBucket: "myspotify-5966c.firebasestorage.app",
+            messagingSenderId: "597187457714",
+            appId: "1:597187457714:web:eb2775082dd45109608fab"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('login-btn').addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = "home.html";
+            } catch (err) {
+                alert("Check credentials, John!");
+            }
+        });
+    </script>
+</body>
+</html>
