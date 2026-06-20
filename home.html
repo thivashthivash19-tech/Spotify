@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | John Music</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0A0A0A] text-white font-sans">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 bg-[#121212] p-6 flex flex-col justify-between">
+            <div>
+                <h1 class="text-2xl font-bold mb-10 tracking-tighter">JOHN MUSIC</h1>
+                <nav class="space-y-4 text-gray-400">
+                    <a href="home.html" class="block hover:text-white transition">Home</a>
+                    <a href="search.html" class="block hover:text-white transition">Search</a>
+                    <a href="profile.html" class="block hover:text-white transition">Profile</a>
+                    <a href="admin.html" class="block text-red-500 hover:text-red-400 transition">Admin Panel</a>
+                </nav>
+            </div>
+            <button id="logout-btn" class="text-gray-500 hover:text-white text-sm">Log Out</button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-10 overflow-y-auto">
+            <h2 class="text-3xl font-bold mb-8">Good evening, John 🎧</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-[#181818] p-5 rounded-2xl hover:bg-[#282828] transition cursor-pointer">
+                    <div class="text-5xl mb-4">🔥</div>
+                    <h3 class="font-bold">Trending Now</h3>
+                </div>
+                <div class="bg-[#181818] p-5 rounded-2xl hover:bg-[#282828] transition cursor-pointer">
+                    <div class="text-5xl mb-4">💎</div>
+                    <h3 class="font-bold">Top Picks</h3>
+                </div>
+                <div class="bg-[#181818] p-5 rounded-2xl hover:bg-[#282828] transition cursor-pointer">
+                    <div class="text-5xl mb-4">🚀</div>
+                    <h3 class="font-bold">New Releases</h3>
+                </div>
+                <div class="bg-[#181818] p-5 rounded-2xl hover:bg-[#282828] transition cursor-pointer">
+                    <div class="text-5xl mb-4">🎧</div>
+                    <h3 class="font-bold">My Favs</h3>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT8_4rWDSCs0mC18XpiqBMEc7YAIuJ6Y0",
+            authDomain: "myspotify-5966c.firebaseapp.com",
+            projectId: "myspotify-5966c",
+            storageBucket: "myspotify-5966c.firebasestorage.app",
+            messagingSenderId: "597187457714",
+            appId: "1:597187457714:web:eb2775082dd45109608fab"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Security check
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "index.html";
+            }
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            });
+        });
+    </script>
+</body>
+</html>
