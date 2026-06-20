@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search | John Music</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0A0A0A] text-white font-sans">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 bg-[#121212] p-6 flex flex-col justify-between">
+            <div>
+                <h1 class="text-2xl font-bold mb-10 tracking-tighter">JOHN MUSIC</h1>
+                <nav class="space-y-4 text-gray-400">
+                    <a href="home.html" class="block hover:text-white transition">Home</a>
+                    <a href="search.html" class="block text-white transition">Search</a>
+                    <a href="profile.html" class="block hover:text-white transition">Profile</a>
+                    <a href="admin.html" class="block text-red-500 hover:text-red-400 transition">Admin Panel</a>
+                </nav>
+            </div>
+            <button id="logout-btn" class="text-gray-500 hover:text-white text-sm">Log Out</button>
+        </aside>
+
+        <!-- Search Content -->
+        <main class="flex-1 p-10 overflow-y-auto">
+            <!-- Search Bar -->
+            <div class="mb-10">
+                <input type="text" placeholder="What do you want to listen to?" class="w-full max-w-2xl p-4 bg-[#1f1f1f] rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 transition-all">
+            </div>
+
+            <!-- Categories Grid -->
+            <h2 class="text-2xl font-bold mb-6">Browse all</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-purple-600 p-5 h-40 rounded-xl flex items-center justify-center cursor-pointer hover:scale-105 transition">
+                    <h3 class="text-xl font-bold">Podcasts 🎙️</h3>
+                </div>
+                <div class="bg-blue-600 p-5 h-40 rounded-xl flex items-center justify-center cursor-pointer hover:scale-105 transition">
+                    <h3 class="text-xl font-bold">Live 🔴</h3>
+                </div>
+                <div class="bg-green-600 p-5 h-40 rounded-xl flex items-center justify-center cursor-pointer hover:scale-105 transition">
+                    <h3 class="text-xl font-bold">Tamil Hits 🎵</h3>
+                </div>
+                <div class="bg-orange-600 p-5 h-40 rounded-xl flex items-center justify-center cursor-pointer hover:scale-105 transition">
+                    <h3 class="text-xl font-bold">Party 🥳</h3>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT8_4rWDSCs0mC18XpiqBMEc7YAIuJ6Y0",
+            authDomain: "myspotify-5966c.firebaseapp.com",
+            projectId: "myspotify-5966c",
+            storageBucket: "myspotify-5966c.firebasestorage.app",
+            messagingSenderId: "597187457714",
+            appId: "1:597187457714:web:eb2775082dd45109608fab"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = "index.html";
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.href = "index.html");
+        });
+    </script>
+</body>
+</html>
