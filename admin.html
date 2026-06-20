@@ -9,69 +9,65 @@
 </head>
 <body class="bg-[#000000] text-white font-sans">
 
-    <main class="p-8 max-w-2xl mx-auto">
-        <h2 class="text-3xl font-bold mb-8 text-red-500">Admin Upload 🛡️</h2>
+    <!-- Mobile Bottom Navigation -->
+    <nav class="md:hidden fixed bottom-0 w-full bg-[#121212] border-t border-[#282828] flex justify-around p-4 z-50">
+        <a href="home.html" class="text-gray-400"><i data-lucide="home"></i></a>
+        <a href="search.html" class="text-gray-400"><i data-lucide="search"></i></a>
+        <a href="profile.html" class="text-gray-400"><i data-lucide="user"></i></a>
+    </nav>
+
+    <main class="p-8 max-w-2xl mx-auto pb-24">
+        <h2 class="text-3xl font-bold mb-8 text-red-500">Admin Panel 🛡️</h2>
         
-        <div class="bg-[#121212] p-8 rounded-2xl border border-gray-800 space-y-6">
+        <div class="bg-[#121212] p-8 rounded-2xl border border-[#282828] space-y-6">
+            <!-- Song Details -->
             <div>
                 <label class="block text-sm text-gray-400 mb-2">Song Title</label>
-                <input type="text" id="title" placeholder="Enter song name" class="w-full p-4 bg-[#1f1f1f] rounded-xl focus:outline-none">
+                <input type="text" id="title" placeholder="Enter song name" class="w-full p-4 bg-[#1f1f1f] rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500">
             </div>
 
             <div>
-                <label class="block text-sm text-gray-400 mb-2">Select Song (MP3)</label>
-                <input type="file" id="audio-file" accept="audio/*" class="w-full p-4 bg-[#1f1f1f] rounded-xl">
+                <label class="block text-sm text-gray-400 mb-2">Audio URL</label>
+                <input type="text" id="audio-url" placeholder="Paste direct audio link" class="w-full p-4 bg-[#1f1f1f] rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500">
             </div>
 
             <div>
-                <label class="block text-sm text-gray-400 mb-2">Select Cover Image</label>
-                <input type="file" id="image-file" accept="image/*" class="w-full p-4 bg-[#1f1f1f] rounded-xl">
+                <label class="block text-sm text-gray-400 mb-2">Cover Image URL</label>
+                <input type="text" id="image-url" placeholder="Paste image link" class="w-full p-4 bg-[#1f1f1f] rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500">
             </div>
 
-            <button id="upload-btn" class="w-full bg-red-600 hover:bg-red-700 font-bold py-4 rounded-xl transition">
-                Upload Song to Database
+            <button id="save-btn" class="w-full bg-red-600 hover:bg-red-700 font-bold py-4 rounded-xl transition">
+                Save Song
             </button>
         </div>
     </main>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-storage.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    <script>
+        lucide.createIcons();
 
-        const firebaseConfig = { /* Unnoda Config Here */ };
-        const app = initializeApp(firebaseConfig);
-        const storage = getStorage(app);
-        const db = getFirestore(app);
-
-        document.getElementById('upload-btn').addEventListener('click', async () => {
+        document.getElementById('save-btn').addEventListener('click', () => {
             const title = document.getElementById('title').value;
-            const audioFile = document.getElementById('audio-file').files[0];
-            const imageFile = document.getElementById('image-file').files[0];
+            const audio = document.getElementById('audio-url').value;
+            const image = document.getElementById('image-url').value;
 
-            if (!title || !audioFile || !imageFile) {
-                alert("Please fill all fields!");
+            if (!title || !audio || !image) {
+                alert("Ellathaiyum fill pannunga!");
                 return;
             }
 
-            // Upload Image
-            const imgRef = ref(storage, 'covers/' + imageFile.name);
-            await uploadBytes(imgRef, imageFile);
-            const imgUrl = await getDownloadURL(imgRef);
-
-            // Upload Audio
-            const audioRef = ref(storage, 'songs/' + audioFile.name);
-            await uploadBytes(audioRef, audioFile);
-            const audioUrl = await getDownloadURL(audioRef);
-
-            // Save to Firestore
-            await addDoc(collection(db, "songs"), {
-                title: title,
-                imageUrl: imgUrl,
-                audioUrl: audioUrl
-            });
-
-            alert("Song Uploaded Successfully!");
+            const songData = { title, audio, image };
+            
+            // Local Storage-la save pannum
+            let songs = JSON.parse(localStorage.getItem('mySongs') || "[]");
+            songs.push(songData);
+            localStorage.setItem('mySongs', JSON.stringify(songs));
+            
+            alert("Song successfully added to Local Storage!");
+            
+            // Inputs-a clear pannum
+            document.getElementById('title').value = '';
+            document.getElementById('audio-url').value = '';
+            document.getElementById('image-url').value = '';
         });
     </script>
 </body>
