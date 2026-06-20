@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | John Music</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-[#000000] text-white font-sans">
+
+    <main class="p-8 max-w-2xl mx-auto">
+        <h2 class="text-3xl font-bold mb-8 text-red-500">Admin Upload 🛡️</h2>
+        
+        <div class="bg-[#121212] p-8 rounded-2xl border border-gray-800 space-y-6">
+            <div>
+                <label class="block text-sm text-gray-400 mb-2">Song Title</label>
+                <input type="text" id="title" placeholder="Enter song name" class="w-full p-4 bg-[#1f1f1f] rounded-xl focus:outline-none">
+            </div>
+
+            <div>
+                <label class="block text-sm text-gray-400 mb-2">Select Song (MP3)</label>
+                <input type="file" id="audio-file" accept="audio/*" class="w-full p-4 bg-[#1f1f1f] rounded-xl">
+            </div>
+
+            <div>
+                <label class="block text-sm text-gray-400 mb-2">Select Cover Image</label>
+                <input type="file" id="image-file" accept="image/*" class="w-full p-4 bg-[#1f1f1f] rounded-xl">
+            </div>
+
+            <button id="upload-btn" class="w-full bg-red-600 hover:bg-red-700 font-bold py-4 rounded-xl transition">
+                Upload Song to Database
+            </button>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-storage.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+        const firebaseConfig = { /* Unnoda Config Here */ };
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+        const db = getFirestore(app);
+
+        document.getElementById('upload-btn').addEventListener('click', async () => {
+            const title = document.getElementById('title').value;
+            const audioFile = document.getElementById('audio-file').files[0];
+            const imageFile = document.getElementById('image-file').files[0];
+
+            if (!title || !audioFile || !imageFile) {
+                alert("Please fill all fields!");
+                return;
+            }
+
+            // Upload Image
+            const imgRef = ref(storage, 'covers/' + imageFile.name);
+            await uploadBytes(imgRef, imageFile);
+            const imgUrl = await getDownloadURL(imgRef);
+
+            // Upload Audio
+            const audioRef = ref(storage, 'songs/' + audioFile.name);
+            await uploadBytes(audioRef, audioFile);
+            const audioUrl = await getDownloadURL(audioRef);
+
+            // Save to Firestore
+            await addDoc(collection(db, "songs"), {
+                title: title,
+                imageUrl: imgUrl,
+                audioUrl: audioUrl
+            });
+
+            alert("Song Uploaded Successfully!");
+        });
+    </script>
+</body>
+</html>
