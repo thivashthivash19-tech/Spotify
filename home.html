@@ -9,28 +9,26 @@
 </head>
 <body class="bg-[#000000] text-white font-sans">
 
-    <!-- Desktop Sidebar -->
     <aside class="hidden md:flex w-64 h-screen fixed p-6 border-r border-[#282828] flex-col">
-        <h1 class="text-xl font-bold mb-10">JOHN MUSIC</h1>
+        <h1 class="text-xl font-bold mb-10 text-green-500">JOHN MUSIC</h1>
         <nav class="space-y-6 text-gray-400">
             <a href="home.html" class="flex items-center gap-4 text-white"><i data-lucide="home"></i> Home</a>
             <a href="search.html" class="flex items-center gap-4 hover:text-white"><i data-lucide="search"></i> Search</a>
             <a href="profile.html" class="flex items-center gap-4 hover:text-white"><i data-lucide="user"></i> Profile</a>
-            <a href="admin.html" class="flex items-center gap-4 text-red-500 hover:text-red-400"><i data-lucide="shield-alert"></i> Admin</a>
+            <a href="admin.html" class="flex items-center gap-4 text-red-500"><i data-lucide="shield-alert"></i> Admin</a>
         </nav>
     </aside>
 
-    <!-- Main Content -->
     <main class="md:ml-64 p-6 pb-24">
-        <h2 class="text-2xl font-bold mb-8">Good evening, John</h2>
-        
-        <!-- Songs Grid -->
-        <div id="songs-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- Songs will be injected here by JavaScript -->
-        </div>
+        <h2 class="text-2xl font-bold mb-6">Latest Hits</h2>
+        <div id="latest-grid" class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-12">
+            </div>
+
+        <h2 class="text-2xl font-bold mb-6">Your Collection</h2>
+        <div id="all-songs-list" class="space-y-4">
+            </div>
     </main>
 
-    <!-- Mobile Bottom Navigation -->
     <nav class="md:hidden fixed bottom-0 w-full bg-[#121212] border-t border-[#282828] flex justify-around p-4 z-50">
         <a href="home.html" class="text-white"><i data-lucide="home"></i></a>
         <a href="search.html" class="text-gray-400"><i data-lucide="search"></i></a>
@@ -40,26 +38,39 @@
     <script>
         lucide.createIcons();
 
-        // Load songs from Local Storage
-        const songsContainer = document.getElementById('songs-grid');
         const storedSongs = JSON.parse(localStorage.getItem('mySongs') || "[]");
-
-        if (storedSongs.length > 0) {
-            storedSongs.forEach(song => {
-                const songCard = `
-                    <div class="bg-[#181818] p-4 rounded-xl hover:bg-[#282828] transition group">
-                        <img src="${song.image}" class="w-full h-40 object-cover rounded-lg mb-4">
-                        <h3 class="font-bold text-white truncate">${song.title}</h3>
-                        <audio controls class="w-full mt-3 h-10 opacity-70 hover:opacity-100">
-                            <source src="${song.audio}" type="audio/mp3">
-                        </audio>
+        
+        // 1. Latest 5 Grid (Last 5 items)
+        const latestGrid = document.getElementById('latest-grid');
+        const latest = storedSongs.slice(-5).reverse();
+        
+        latest.forEach(song => {
+            latestGrid.innerHTML += `
+                <div class="bg-[#181818] p-4 rounded-lg hover:bg-[#282828] transition cursor-pointer group">
+                    <div class="relative mb-4">
+                        <img src="${song.image}" class="w-full aspect-square object-cover rounded-md">
+                        <div class="absolute bottom-2 right-2 bg-green-500 p-3 rounded-full opacity-0 group-hover:opacity-100 transition shadow-lg">
+                            <i data-lucide="play" class="text-black fill-black"></i>
+                        </div>
                     </div>
-                `;
-                songsContainer.innerHTML += songCard;
-            });
-        } else {
-            songsContainer.innerHTML = "<p class='text-gray-500'>No songs uploaded yet! Go to Admin page.</p>";
-        }
+                    <h3 class="font-bold truncate">${song.title}</h3>
+                </div>
+            `;
+        });
+
+        // 2. All Songs List
+        const allList = document.getElementById('all-songs-list');
+        storedSongs.forEach(song => {
+            allList.innerHTML += `
+                <div class="flex items-center gap-4 bg-[#121212] p-3 rounded-lg hover:bg-[#282828] transition">
+                    <img src="${song.image}" class="w-12 h-12 rounded object-cover">
+                    <h3 class="flex-1 font-medium">${song.title}</h3>
+                    <i data-lucide="play" class="w-5 h-5 cursor-pointer text-gray-400 hover:text-white"></i>
+                </div>
+            `;
+        });
+        
+        lucide.createIcons();
     </script>
 </body>
 </html>
