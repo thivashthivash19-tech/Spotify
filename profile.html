@@ -5,71 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | John Music</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-[#0A0A0A] text-white font-sans">
+<body class="bg-[#000000] text-white font-sans">
 
-    <div class="flex h-screen overflow-hidden">
+    <!-- Desktop Sidebar -->
+    <aside class="hidden md:flex w-64 h-screen fixed p-6 border-r border-[#282828] flex-col">
+        <h1 class="text-xl font-bold mb-10">JOHN MUSIC</h1>
+        <nav class="space-y-6 text-gray-400">
+            <a href="home.html" class="flex items-center gap-4 hover:text-white"><i data-lucide="home"></i> Home</a>
+            <a href="search.html" class="flex items-center gap-4 hover:text-white"><i data-lucide="search"></i> Search</a>
+            <a href="profile.html" class="flex items-center gap-4 text-white"><i data-lucide="user"></i> Profile</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="md:ml-64 p-6 pb-24">
+        <h2 class="text-2xl font-bold mb-8">Profile</h2>
         
-        <!-- Sidebar -->
-        <aside class="w-64 bg-[#121212] p-6 flex flex-col justify-between">
-            <div>
-                <h1 class="text-2xl font-bold mb-10 tracking-tighter">JOHN MUSIC</h1>
-                <nav class="space-y-4 text-gray-400">
-                    <a href="home.html" class="block hover:text-white transition">Home</a>
-                    <a href="search.html" class="block hover:text-white transition">Search</a>
-                    <a href="profile.html" class="block text-white transition">Profile</a>
-                    <a href="admin.html" class="block text-red-500 hover:text-red-400 transition">Admin Panel</a>
-                </nav>
-            </div>
-            <button id="logout-btn" class="text-gray-500 hover:text-white text-sm">Log Out</button>
-        </aside>
-
-        <!-- Profile Content -->
-        <main class="flex-1 p-10 overflow-y-auto">
-            <h2 class="text-3xl font-bold mb-10">Your Profile</h2>
+        <div class="bg-[#121212] p-8 rounded-2xl max-w-sm">
+            <div class="text-gray-400 mb-4"><i data-lucide="user-circle" class="w-16 h-16"></i></div>
+            <h3 class="text-xl font-bold">John</h3>
+            <p class="text-gray-500 mb-6">john@example.com</p>
             
-            <div class="bg-[#121212] p-8 rounded-3xl max-w-lg border border-[#1f1f1f]">
-                <div class="w-24 h-24 bg-gray-700 rounded-full mb-6 flex items-center justify-center text-4xl">👤</div>
-                <h3 id="user-name" class="text-2xl font-bold">John</h3>
-                <p id="user-email" class="text-gray-400 mb-8">john@example.com</p>
-                
-                <div class="space-y-4">
-                    <button class="w-full text-left p-4 bg-[#1f1f1f] rounded-xl hover:bg-[#282828] transition">Edit Profile</button>
-                    <button class="w-full text-left p-4 bg-[#1f1f1f] rounded-xl hover:bg-[#282828] transition">Account Settings</button>
-                    <button class="w-full text-left p-4 bg-[#1f1f1f] rounded-xl text-red-500 hover:bg-[#282828] transition">Delete Account</button>
-                </div>
-            </div>
-        </main>
-    </div>
+            <button id="logout-btn" class="w-full text-left p-3 border border-red-900 text-red-500 rounded-lg hover:bg-red-900 transition">
+                Log Out
+            </button>
+        </div>
+    </main>
 
-    <!-- Firebase Script -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    <!-- Mobile Bottom Navigation -->
+    <nav class="md:hidden fixed bottom-0 w-full bg-[#121212] border-t border-[#282828] flex justify-around p-4">
+        <a href="home.html" class="text-gray-400 hover:text-white"><i data-lucide="home"></i></a>
+        <a href="search.html" class="text-gray-400 hover:text-white"><i data-lucide="search"></i></a>
+        <a href="profile.html" class="text-white hover:text-white"><i data-lucide="user"></i></a>
+    </nav>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDT8_4rWDSCs0mC18XpiqBMEc7YAIuJ6Y0",
-            authDomain: "myspotify-5966c.firebaseapp.com",
-            projectId: "myspotify-5966c",
-            storageBucket: "myspotify-5966c.firebasestorage.app",
-            messagingSenderId: "597187457714",
-            appId: "1:597187457714:web:eb2775082dd45109608fab"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('user-email').innerText = user.email;
-            } else {
-                window.location.href = "index.html";
-            }
-        });
-
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            signOut(auth).then(() => window.location.href = "index.html");
-        });
+    <script>
+        lucide.createIcons();
     </script>
 </body>
 </html>
